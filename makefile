@@ -6,10 +6,10 @@ LUA ?= luajit/src/luajit
 
 WINDRES ?= windres
 
-CFLAGS += -Iluajit/src -Iraylib/src -Iraygui/src -Iphysac/src
+CFLAGS += -Iluajit/src -Iraylib/src -Iraygui/src
 LDFLAGS += luajit/src/libluajit.a raylib/src/libraylib.a
 
-MODULES := raymath rlgl gestures physac raygui rcamera
+MODULES := raymath rlgl gestures raygui rcamera
 
 # raylib settings
 PLATFORM ?= PLATFORM_DESKTOP
@@ -53,6 +53,9 @@ all: raylua_s raylua_e raylua_r luajit raylib
 luajit:
 	$(MAKE) -C luajit amalg \
 		CC=$(CC) BUILDMODE=static \
+		HOST_MSYS=1 \
+		HOST_LUA=host/minilua.exe \
+		GIT_RELVER='[ -e ../.git ] && git show -s --format=%ct >luajit_relver.txt 2>/dev/null || cat ../.relver >luajit_relver.txt 2>/dev/null || :' \
 		MACOSX_DEPLOYMENT_TARGET=10.13
 
 raylib:
