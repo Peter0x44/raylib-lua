@@ -70,6 +70,7 @@ struct raylua_bind_entry raylua_entries[] = {
 
 for _,modname in ipairs(modules) do
   for line in io.lines("tools/" .. modname .. ".h") do
+    line = line:gsub("\r$", "")
     if line:sub(1, 2) ~= "//" then
       if line:sub(1, 1) == "#" then
         file:write("  " .. line .. "\n")
