@@ -22,10 +22,12 @@ USE_EXTERNAL_GLFW ?= FALSE
 PLATFORM_SHELL ?= sh
 
 ifeq ($(OS),Windows_NT)
+	EXEEXT := .exe
 	LDFLAGS += -lopengl32 -lgdi32 -lwinmm -static
 	LDFLAGS_R += -mwindows 
 	EXTERNAL_FILES := src/res/icon.res
 else ifeq ($(shell uname),Darwin)
+	EXEEXT :=
 	LDFLAGS += -framework CoreVideo -framework IOKit -framework Cocoa \
 		-framework GLUT -framework OpenGL 
 	ifeq ($(shell uname -m),arm64)
@@ -36,6 +38,7 @@ else ifeq ($(shell uname),Darwin)
 	endif
 	EXTERNAL_FILES :=
 else
+	EXEEXT :=
 	LDFLAGS += -ldl -lpthread
 	ifeq ($(PLATFORM),PLATFORM_DRM)
 		LDFLAGS += -ldrm -lGLESv2 -lEGL -lgbm
@@ -55,8 +58,8 @@ luajit:
 	$(MAKE) -C luajit amalg \
 		CC=$(CC) BUILDMODE=static \
 		HOST_MSYS=mingw \
-		HOST_LUA=./host/minilua.exe \
-		MINILUA_DEP=host/minilua.exe \
+		HOST_LUA=./host/minilua$(EXEEXT) \
+		MINILUA_DEP=host/minilua$(EXEEXT) \
 		MACOSX_DEPLOYMENT_TARGET=10.13
 
 raylib:
